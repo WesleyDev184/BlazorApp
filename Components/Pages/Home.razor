@@ -1,0 +1,55 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@using BlazorApp.Modules.Users.Entity
+@using BlazorApp.Modules.Users
+@inject UserServices UserServices
+
+<PageTitle>Cadastro</PageTitle>
+
+<h3>Cadastro de Usuário</h3>
+
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit" FormName="UserRegistrationForm">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div>
+    <label>Nome:</label>
+    <InputText @bind-Value="user!.Name" class="form-control" />
+    <ValidationMessage For="@(() => user.Name)" />
+  </div>
+
+  <div>
+    <label>Cpf:</label>
+    <InputText @bind-Value="user.CPF" class="form-control" />
+    <ValidationMessage For="@(() => user.CPF)" />
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-2">Cadastrar</button>
+</EditForm>
+
+@code {
+  [SupplyParameterFromForm]
+  private User? user { get; set; }
+
+  protected override void OnInitialized() => user ??= new();
+
+  private void HandleValidSubmit()
+  {
+    if (user != null)
+    {
+      var res = UserServices.Create(user);
+      if (res != null)
+      {
+        Console.WriteLine("Usuário cadastrado com sucesso!");
+      }
+      else
+      {
+        Console.WriteLine("Erro ao cadastrar usuário!");
+      }
+    }
+    else
+    {
+      Console.WriteLine("Erro: Usuário é nulo!");
+    }
+  }
+}
