@@ -1,8 +1,10 @@
 ﻿@page "/"
 @using System.ComponentModel.DataAnnotations
+@using BlazorApp.Modules.Users.Dto
 @using BlazorApp.Modules.Users.Entity
 @using BlazorApp.Modules.Users
 @inject UserServices UserServices
+@rendermode InteractiveServer
 
 <PageTitle>Cadastro</PageTitle>
 
@@ -27,20 +29,64 @@
   <button type="submit" class="btn btn-primary mt-2">Cadastrar</button>
 </EditForm>
 
+<hr />
+
+@if (users != null && users.Any())
+{
+  <h3>Lista de Usuários</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>Cpf</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var u in users)
+      {
+        <tr>
+          <td>@u.Id</td>
+          <td>@u.Name</td>
+          <td>@u.CPF</td>
+          <td class="d-flex gap-2">
+            <NavLink class="btn btn-sm btn-warning" href="@($"/edit-user/{u.Id}")">Editar</NavLink>
+            <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteUser(u.Id))">Excluir</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+else
+{
+  <p>Não há usuários cadastrados.</p>
+}
+
 @code {
   [SupplyParameterFromForm]
   private User? user { get; set; }
 
-  protected override void OnInitialized() => user ??= new();
+  private List<ResponseEntityUserDTO> users = new List<ResponseEntityUserDTO>();
 
-  private void HandleValidSubmit()
+  protected override async Task OnInitializedAsync()
+  {
+    user ??= new();
+    users = await UserServices.GetAll();
+  }
+
+  private async Task HandleValidSubmit()
   {
     if (user != null)
     {
-      var res = UserServices.Create(user);
+      var res = await UserServices.Create(user);
       if (res != null)
       {
         Console.WriteLine("Usuário cadastrado com sucesso!");
+        // Atualiza a lista de usuários após cadastro
+        users = await UserServices.GetAll();
+        user = new();
       }
       else
       {
@@ -52,4 +98,20 @@
       Console.WriteLine("Erro: Usuário é nulo!");
     }
   }
+
+  private async Task DeleteUser(Guid id)
+  {
+    Console.WriteLine($"Tentando deletar usuário com ID: {id}");
+    var res = await UserServices.Delete(id);
+    if (res)
+    {
+      Console.WriteLine("Usuário deletado com sucesso!");
+      users = await UserServices.GetAll();
+    }
+    else
+    {
+      Console.WriteLine("Erro ao deletar usuário!");
+    }
+  }
+
 }

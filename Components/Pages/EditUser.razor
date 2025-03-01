@@ -1,0 +1,69 @@
+@page "/edit-user/{Id:guid}"
+@using System.ComponentModel.DataAnnotations
+@using BlazorApp.Modules.Users
+@using BlazorApp.Modules.Users.Entity
+@inject UserServices UserServices
+@inject NavigationManager Navigation
+
+<PageTitle>Update</PageTitle>
+
+<h3>Editar Usuário</h3>
+
+@if (user != null)
+{
+  <EditForm Model="@user" OnValidSubmit="HandleSave" FormName="UserEditForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+      <label>Nome:</label>
+      <InputText @bind-Value="user!.Name" class="form-control" />
+      <ValidationMessage For="@(() => user.Name)" />
+    </div>
+
+    <div>
+      <label>Cpf:</label>
+      <InputText @bind-Value="user.CPF" class="form-control" />
+      <ValidationMessage For="@(() => user.CPF)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+    <NavLink class="btn btn-secondary mt-2 ms-2" href="/">Voltar</NavLink>
+  </EditForm>
+}
+else
+{
+  <p>Carregando...</p>
+}
+
+@code {
+  [SupplyParameterFromForm]
+  private User? user { get; set; }
+  [Parameter] public Guid Id { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (Id != Guid.Empty && user == null)
+    {
+      user = await UserServices.GetById(Id);
+    }
+  }
+
+  private async Task HandleSave()
+  {
+    if (user != null)
+    {
+      var res = await UserServices.Update(user.Name, user.CPF, Id);
+
+      if (res.Name == user.Name && res.CPF == user.CPF)
+      {
+        Console.WriteLine("Usuário atualizado com sucesso!");
+        Navigation.NavigateTo("/"); // Redireciona para a página inicial
+      }
+      else
+      {
+        Console.WriteLine("Erro ao atualizar usuário!");
+      }
+    }
+  }
+}

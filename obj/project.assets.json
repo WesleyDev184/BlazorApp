@@ -3080,19 +3080,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\wesley\\.nuget\\packages\\": {}
+    "C:\\Users\\waarq\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\blazor\\BlazorApp\\BlazorApp.csproj",
+      "projectUniqueName": "C:\\Github\\BlazorApp\\BlazorApp.csproj",
       "projectName": "BlazorApp",
-      "projectPath": "D:\\GitHub\\blazor\\BlazorApp\\BlazorApp.csproj",
-      "packagesPath": "C:\\Users\\wesley\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\blazor\\BlazorApp\\obj\\",
+      "projectPath": "C:\\Github\\BlazorApp\\BlazorApp.csproj",
+      "packagesPath": "C:\\Users\\waarq\\.nuget\\packages\\",
+      "outputPath": "C:\\Github\\BlazorApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\wesley\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\waarq\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"

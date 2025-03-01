@@ -14,4 +14,17 @@ public class User
   public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
   public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
+  public void UpdateUser(string? name, string? cpf)
+  {
+    Name = name ?? Name;
+    CPF = cpf ?? CPF;
+    UpdatedAt = DateTime.UtcNow;
+  }
+
+  public void DeactivateUser()
+  {
+    IsActive = false;
+    UpdatedAt = DateTime.UtcNow;
+  }
+
 }
